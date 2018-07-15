@@ -1,0 +1,8 @@
+.bundle
+vendor
+bundle
+config
+Gemfile.lock
+*.sqlite3*
+*.db
+*.out
