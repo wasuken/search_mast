@@ -10,8 +10,7 @@ get '/json' do
 end
 
 get '/' do
-  "test"
-  # erb :index
+  erb :index
 end
 
 get '/search' do

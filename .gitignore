@@ -6,3 +6,4 @@ Gemfile.lock
 *.sqlite3*
 *.db
 *.out
+*.min.js
