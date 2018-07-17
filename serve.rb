@@ -1,3 +1,4 @@
+# coding: utf-8
 require 'sqlite3'
 require 'sequel'
 require 'sinatra'
@@ -5,8 +6,7 @@ require 'sinatra'
 DB = Sequel.sqlite('toot.sqlite3')
 
 get '/json' do
-  @toot_json = get_toot()
-  get_toot().to_s
+  get_lasted_toot.to_s
 end
 
 get '/' do
@@ -14,10 +14,29 @@ get '/' do
 end
 
 get '/search' do
-  # if params[:fmt] == "json"
-  # params[:words] == ",,,,..."
+  opt = params["opt"] || "or"
+  fmt = params["fmt"]  || "json"
+  if params["words"].nil?
+    redirect '/json' if fmt=="json"
+    redirect '/'
+  end
+  result=[]
+  DB[:toot].each{|t|
+    result.push(t) if include_opt_map?(opt, t[:toot], params["words"].split(','))
+  }
+  result.to_s
+end
+# opt=or  -> 文字列targetがwordsのいずれかを含む場合、true
+# opt=and -> 文字列targetがwordsのすべてを含む場合,true
+# optが上記以外はすべてfalse
+def include_opt_map?(opt,target,words)
+  if opt=="and"
+    words.all?{|w| target.include?(w) }
+  elsif opt=="or"
+    words.any?{|w| target.include?(w) }
+  end
 end
 
-def get_toot(fmt="json",words=[])
-  DB[:toot].order(Sequel.desc(:id)).limit(10).all.to_json
+def get_lasted_toot(fmt="json",words=[],take=10)
+  DB[:toot].order(Sequel.desc(:id)).limit(take).all.to_json
 end

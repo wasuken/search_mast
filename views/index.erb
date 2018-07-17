@@ -9,7 +9,7 @@
     <div ng-controller="mainCtrl">
 	  <ul>
 		<li ng-repeat="toot in toots">
-		  {{toot}}
+		  {{toot.username}} : <p>{{ toot.toot }}</p>
 		</li>
 	  </ul>
 	</div>
