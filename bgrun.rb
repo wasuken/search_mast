@@ -13,7 +13,7 @@ begin
   client.firehose do |toot|
     next if !toot.kind_of?(Mastodon::Status)
     username = toot.account.username
-    content = toot.content
+    content = toot.content.gsub(/<("[^"]*"|'[^']*'|[^'">])*>/,"")
     DB[:toot].insert(username: username, toot: content)
     puts "#{username}: #{content}"
   end

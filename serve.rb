@@ -14,17 +14,21 @@ get '/' do
 end
 
 get '/search' do
+  redirect '/' if params["words"].nil?
   opt = params["opt"] || "or"
   fmt = params["fmt"]  || "json"
   if params["words"].nil?
     redirect '/json' if fmt=="json"
     redirect '/'
   end
-  result=[]
-  DB[:toot].each{|t|
-    result.push(t) if include_opt_map?(opt, t[:toot], params["words"].split(','))
-  }
-  result.to_s
+  DB[:toot].all
+    .select{|t| include_opt_map?(opt, t[:toot], params["words"].split(','))}
+    .to_s
+end
+get '/user' do
+  redirect '/' if params["users"].nil?
+  users = params["users"].split(",")
+  DB[:toot].where(:username => users).select(:username).all.to_s
 end
 # opt=or  -> 文字列targetがwordsのいずれかを含む場合、true
 # opt=and -> 文字列targetがwordsのすべてを含む場合,true
