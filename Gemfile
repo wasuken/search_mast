@@ -10,4 +10,7 @@ gem "sequel"
 gem "sqlite3"
 gem "sinatra"
 gem "parseconfig"
+gem "minitest"
+gem "rack-test"
+
 # gem "rails"

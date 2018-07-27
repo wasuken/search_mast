@@ -23,12 +23,12 @@ get '/search' do
   end
   DB[:toot].all
     .select{|t| include_opt_map?(opt, t[:toot], params["words"].split(','))}
-    .to_s
+    .to_json
 end
 get '/user' do
   redirect '/' if params["users"].nil?
   users = params["users"].split(",")
-  DB[:toot].where(:username => users).select(:username).all.to_s
+  DB[:toot].where(:username => users).select(:username,:toot).all.to_json
 end
 # opt=or  -> 文字列targetがwordsのいずれかを含む場合、true
 # opt=and -> 文字列targetがwordsのすべてを含む場合,true
